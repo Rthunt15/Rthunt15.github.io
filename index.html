@@ -1,204 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weight Loss Program</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-        }
-        .form-section {
-            background: #fff;
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .form-section input, .form-section select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-        .form-section button {
-            padding: 10px 15px;
-            background: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .form-section button:hover {
-            background: #0056b3;
-        }
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            text-align: center;
-        }
-        .calendar div {
-            background: #fff;
-            padding: 10px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .history {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Macro Tracker</title>
+  <style>
+    body { font-family: sans-serif; padding: 1em; max-width: 600px; margin: auto; }
+    input { width: 100%; padding: 0.5em; margin-bottom: 1em; }
+    button { padding: 0.5em 1em; margin-top: 1em; }
+    .section { border-top: 1px solid #ccc; padding-top: 1em; margin-top: 2em; }
+    .results { margin-top: 1em; font-weight: bold; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Weight Loss Program</h1>
+  <h1>Macro Tracker</h1>
 
-        <!-- Input Section -->
-        <div class="form-section">
-            <h2>Set Your Goals</h2>
-            <form id="goalForm">
-                <label for="name">Name:</label>
-                <input type="text" id="name" required>
+  <div class="section">
+    <h2>Add by Item</h2>
+    <input type="number" id="cal" placeholder="Calories" />
+    <input type="number" id="fat" placeholder="Fat (g)" />
+    <input type="number" id="carbs" placeholder="Carbs (g)" />
+    <input type="number" id="protein" placeholder="Protein (g)" />
+    <button onclick="addItem()">Add Item</button>
 
-                <label for="currentWeight">Current Weight (lbs):</label>
-                <input type="number" id="currentWeight" required>
-
-                <label for="goalWeight">Goal Weight (lbs):</label>
-                <input type="number" id="goalWeight" required>
-
-                <label for="activityLevel">Activity Level:</label>
-                <select id="activityLevel" required>
-                    <option value="sedentary">Sedentary</option>
-                    <option value="light">Light Activity</option>
-                    <option value="moderate">Moderate Activity</option>
-                    <option value="active">Active</option>
-                </select>
-
-                <button type="button" onclick="addParticipant()">Add Participant</button>
-            </form>
-        </div>
-
-        <!-- Participant List -->
-        <div class="form-section" id="participantsSection">
-            <h2>Participants</h2>
-            <ul id="participantsList"></ul>
-        </div>
-
-        <!-- Generate Schedule -->
-        <div class="form-section">
-            <h2>Generate Schedule</h2>
-            <button onclick="generateSchedule()">Generate Weekly Meal & Exercise Plan</button>
-        </div>
-
-        <!-- Schedule Output -->
-        <div class="form-section" id="scheduleSection">
-            <h2>Weekly Schedule</h2>
-            <div class="calendar" id="calendar"></div>
-        </div>
-
-        <!-- History Section -->
-        <div class="form-section history" id="historySection">
-            <h2>History of Weekly Plans</h2>
-            <ul id="historyList"></ul>
-        </div>
+    <div class="results" id="itemResults">
+      Total: 0 Cal / 0g Fat / 0g Carbs / 0g Protein
     </div>
+  </div>
 
-    <script>
-        const participants = [];
-        const history = JSON.parse(localStorage.getItem('history')) || [];
+  <div class="section">
+    <h2>Calculate by Serving Size</h2>
+    <input type="number" id="servingSize" placeholder="Serving Size (e.g., 100g)" />
+    <input type="number" id="servingCal" placeholder="Calories per Serving" />
+    <input type="number" id="servingFat" placeholder="Fat per Serving" />
+    <input type="number" id="servingCarbs" placeholder="Carbs per Serving" />
+    <input type="number" id="servingProtein" placeholder="Protein per Serving" />
+    <input type="number" id="actualSize" placeholder="Actual Size Used (e.g., 150g)" />
+    <button onclick="calculateByServing()">Calculate</button>
+    <button onclick="addServingToTotal()">Copy to Total</button>
 
-        function addParticipant() {
-            const name = document.getElementById('name').value;
-            const currentWeight = document.getElementById('currentWeight').value;
-            const goalWeight = document.getElementById('goalWeight').value;
-            const activityLevel = document.getElementById('activityLevel').value;
+    <div class="results" id="servingResults">
+      Scaled Macros: 0 Cal / 0g Fat / 0g Carbs / 0g Protein
+    </div>
+  </div>
 
-            if (name && currentWeight && goalWeight && activityLevel) {
-                participants.push({ name, currentWeight, goalWeight, activityLevel });
-                updateParticipantList();
-                document.getElementById('goalForm').reset();
-            } else {
-                alert('Please fill out all fields.');
-            }
-        }
+  <script>
+    let total = { cal: 0, fat: 0, carbs: 0, protein: 0 };
+    let lastServed = { cal: 0, fat: 0, carbs: 0, protein: 0 };
 
-        function updateParticipantList() {
-            const list = document.getElementById('participantsList');
-            list.innerHTML = '';
-            participants.forEach((participant) => {
-                const li = document.createElement('li');
-                li.textContent = `${participant.name} - Current Weight: ${participant.currentWeight} lbs, Goal: ${participant.goalWeight} lbs, Activity Level: ${participant.activityLevel}`;
-                list.appendChild(li);
-            });
-        }
-
-        function generateSchedule() {
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
-            const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-            const weeklyPlan = weekDays.map(day => {
-                const meal = `Breakfast: Oatmeal and fruit\nLunch: Grilled chicken salad\nDinner: Salmon with steamed vegetables`;
-                const exercise = `30-minute cardio session`; // This should be tailored to the activity level and goals.
-                return { day, meal, exercise };
-            });
-
-            weeklyPlan.forEach(({ day, meal, exercise }) => {
-                const dayDiv = document.createElement('div');
-                dayDiv.innerHTML = `<strong>${day}</strong><br><b>Meals:</b><br>${meal.replace(/\n/g, '<br>')}<br><b>Exercise:</b> ${exercise}`;
-                calendar.appendChild(dayDiv);
-            });
-
-            history.push(weeklyPlan);
-            localStorage.setItem('history', JSON.stringify(history));
-            updateHistory();
-        }
-
-        function updateHistory() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
-
-            history.forEach((week, index) => {
-                const weekItem = document.createElement('li');
-                weekItem.textContent = `Week ${index + 1}`;
-                weekItem.onclick = () => displayWeek(week);
-                historyList.appendChild(weekItem);
-            });
-        }
-
-        function displayWeek(week) {
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
-
-            week.forEach(({ day, meal, exercise }) => {
-                const dayDiv = document.createElement('div');
-                dayDiv.innerHTML = `<strong>${day}</strong><br><b>Meals:</b><br>${meal.replace(/\n/g, '<br>')}<br><b>Exercise:</b> ${exercise}`;
-                calendar.appendChild(dayDiv);
-            });
-        }
-
-        // Initialize history on load
-        updateHistory();
-    </script>
-    <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js')
-        .then(() => console.log('Service Worker registered successfully.'))
-        .catch(error => console.log('Service Worker registration failed:', error));
+    function updateTotalDisplay() {
+      document.getElementById("itemResults").textContent =
+        `Total: ${total.cal.toFixed(1)} Cal / ${total.fat.toFixed(1)}g Fat / ${total.carbs.toFixed(1)}g Carbs / ${total.protein.toFixed(1)}g Protein`;
     }
-</script>
 
+    function addItem() {
+      total.cal += parseFloat(document.getElementById("cal").value) || 0;
+      total.fat += parseFloat(document.getElementById("fat").value) || 0;
+      total.carbs += parseFloat(document.getElementById("carbs").value) || 0;
+      total.protein += parseFloat(document.getElementById("protein").value) || 0;
+
+      document.getElementById("cal").value = "";
+      document.getElementById("fat").value = "";
+      document.getElementById("carbs").value = "";
+      document.getElementById("protein").value = "";
+
+      updateTotalDisplay();
+    }
+
+    function calculateByServing() {
+      const size = parseFloat(document.getElementById("servingSize").value) || 1;
+      const actual = parseFloat(document.getElementById("actualSize").value) || 0;
+
+      const scale = actual / size;
+
+      lastServed.cal = (parseFloat(document.getElementById("servingCal").value) || 0) * scale;
+      lastServed.fat = (parseFloat(document.getElementById("servingFat").value) || 0) * scale;
+      lastServed.carbs = (parseFloat(document.getElementById("servingCarbs").value) || 0) * scale;
+      lastServed.protein = (parseFloat(document.getElementById("servingProtein").value) || 0) * scale;
+
+      document.getElementById("servingResults").textContent =
+        `Scaled Macros: ${lastServed.cal.toFixed(1)} Cal / ${lastServed.fat.toFixed(1)}g Fat / ${lastServed.carbs.toFixed(1)}g Carbs / ${lastServed.protein.toFixed(1)}g Protein`;
+    }
+
+    function addServingToTotal() {
+      total.cal += lastServed.cal;
+      total.fat += lastServed.fat;
+      total.carbs += lastServed.carbs;
+      total.protein += lastServed.protein;
+      updateTotalDisplay();
+    }
+  </script>
 </body>
 </html>
