@@ -1,18 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Macro Tracker</title>
   <style>
-    body { font-family: sans-serif; padding: 1em; max-width: 600px; margin: auto; }
-    input { width: 100%; padding: 0.5em; margin-bottom: 1em; }
-    button { padding: 0.5em 1em; margin-top: 1em; }
-    .section { border-top: 1px solid #ccc; padding-top: 1em; margin-top: 2em; }
-    .results { margin-top: 1em; font-weight: bold; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 1em;
+      margin: 0;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 0.5em;
+    }
+
+    .section {
+      background-color: #fff;
+      padding: 1em;
+      margin: 1em 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7em;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 0.6em 1em;
+      margin: 0.3em 0.3em 0 0;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .macro-boxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      margin-top: 1em;
+    }
+
+    .macro-box {
+      flex: 1 1 45%;
+      background-color: #f1f3f5;
+      padding: 0.8em;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1em;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em;
+      margin-top: 0.5em;
+    }
   </style>
 </head>
 <body>
+
   <h1>Macro Tracker</h1>
 
   <div class="section">
@@ -21,10 +85,17 @@
     <input type="number" id="fat" placeholder="Fat (g)" />
     <input type="number" id="carbs" placeholder="Carbs (g)" />
     <input type="number" id="protein" placeholder="Protein (g)" />
-    <button onclick="addItem()">Add Item</button>
 
-    <div class="results" id="itemResults">
-      Total: 0 Cal / 0g Fat / 0g Carbs / 0g Protein
+    <div class="button-group">
+      <button onclick="addItem()">Add Item</button>
+      <button onclick="undoLast()">Undo</button>
+    </div>
+
+    <div class="macro-boxes">
+      <div class="macro-box" id="totalCal">Calories: 0</div>
+      <div class="macro-box" id="totalFat">Fat: 0g</div>
+      <div class="macro-box" id="totalCarbs">Carbs: 0g</div>
+      <div class="macro-box" id="totalProtein">Protein: 0g</div>
     </div>
   </div>
 
@@ -36,41 +107,63 @@
     <input type="number" id="servingCarbs" placeholder="Carbs per Serving" />
     <input type="number" id="servingProtein" placeholder="Protein per Serving" />
     <input type="number" id="actualSize" placeholder="Actual Size Used (e.g., 150g)" />
-    <button onclick="calculateByServing()">Calculate</button>
-    <button onclick="addServingToTotal()">Copy to Total</button>
 
-    <div class="results" id="servingResults">
-      Scaled Macros: 0 Cal / 0g Fat / 0g Carbs / 0g Protein
+    <div class="button-group">
+      <button onclick="calculateByServing()">Calculate</button>
+      <button onclick="addServingToTotal()">Copy to Total</button>
+      <button onclick="clearScaling()">Clear Scaling</button>
+    </div>
+
+    <div class="macro-boxes">
+      <div class="macro-box" id="scaledCal">Calories: 0</div>
+      <div class="macro-box" id="scaledFat">Fat: 0g</div>
+      <div class="macro-box" id="scaledCarbs">Carbs: 0g</div>
+      <div class="macro-box" id="scaledProtein">Protein: 0g</div>
     </div>
   </div>
 
   <script>
     let total = { cal: 0, fat: 0, carbs: 0, protein: 0 };
+    let history = [];
     let lastServed = { cal: 0, fat: 0, carbs: 0, protein: 0 };
 
     function updateTotalDisplay() {
-      document.getElementById("itemResults").textContent =
-        `Total: ${total.cal.toFixed(1)} Cal / ${total.fat.toFixed(1)}g Fat / ${total.carbs.toFixed(1)}g Carbs / ${total.protein.toFixed(1)}g Protein`;
+      document.getElementById("totalCal").textContent = `Calories: ${total.cal.toFixed(1)}`;
+      document.getElementById("totalFat").textContent = `Fat: ${total.fat.toFixed(1)}g`;
+      document.getElementById("totalCarbs").textContent = `Carbs: ${total.carbs.toFixed(1)}g`;
+      document.getElementById("totalProtein").textContent = `Protein: ${total.protein.toFixed(1)}g`;
     }
 
     function addItem() {
-      total.cal += parseFloat(document.getElementById("cal").value) || 0;
-      total.fat += parseFloat(document.getElementById("fat").value) || 0;
-      total.carbs += parseFloat(document.getElementById("carbs").value) || 0;
-      total.protein += parseFloat(document.getElementById("protein").value) || 0;
+      const newItem = {
+        cal: parseFloat(document.getElementById("cal").value) || 0,
+        fat: parseFloat(document.getElementById("fat").value) || 0,
+        carbs: parseFloat(document.getElementById("carbs").value) || 0,
+        protein: parseFloat(document.getElementById("protein").value) || 0
+      };
 
-      document.getElementById("cal").value = "";
-      document.getElementById("fat").value = "";
-      document.getElementById("carbs").value = "";
-      document.getElementById("protein").value = "";
+      history.push({ ...total }); // Save current state
+      total.cal += newItem.cal;
+      total.fat += newItem.fat;
+      total.carbs += newItem.carbs;
+      total.protein += newItem.protein;
+
+      // Clear inputs
+      ["cal", "fat", "carbs", "protein"].forEach(id => document.getElementById(id).value = "");
 
       updateTotalDisplay();
+    }
+
+    function undoLast() {
+      if (history.length > 0) {
+        total = history.pop();
+        updateTotalDisplay();
+      }
     }
 
     function calculateByServing() {
       const size = parseFloat(document.getElementById("servingSize").value) || 1;
       const actual = parseFloat(document.getElementById("actualSize").value) || 0;
-
       const scale = actual / size;
 
       lastServed.cal = (parseFloat(document.getElementById("servingCal").value) || 0) * scale;
@@ -78,17 +171,35 @@
       lastServed.carbs = (parseFloat(document.getElementById("servingCarbs").value) || 0) * scale;
       lastServed.protein = (parseFloat(document.getElementById("servingProtein").value) || 0) * scale;
 
-      document.getElementById("servingResults").textContent =
-        `Scaled Macros: ${lastServed.cal.toFixed(1)} Cal / ${lastServed.fat.toFixed(1)}g Fat / ${lastServed.carbs.toFixed(1)}g Carbs / ${lastServed.protein.toFixed(1)}g Protein`;
+      document.getElementById("scaledCal").textContent = `Calories: ${lastServed.cal.toFixed(1)}`;
+      document.getElementById("scaledFat").textContent = `Fat: ${lastServed.fat.toFixed(1)}g`;
+      document.getElementById("scaledCarbs").textContent = `Carbs: ${lastServed.carbs.toFixed(1)}g`;
+      document.getElementById("scaledProtein").textContent = `Protein: ${lastServed.protein.toFixed(1)}g`;
     }
 
     function addServingToTotal() {
+      history.push({ ...total });
       total.cal += lastServed.cal;
       total.fat += lastServed.fat;
       total.carbs += lastServed.carbs;
       total.protein += lastServed.protein;
       updateTotalDisplay();
     }
+
+    function clearScaling() {
+      lastServed = { cal: 0, fat: 0, carbs: 0, protein: 0 };
+      [
+        "servingSize", "servingCal", "servingFat",
+        "servingCarbs", "servingProtein", "actualSize"
+      ].forEach(id => document.getElementById(id).value = "");
+
+      document.getElementById("scaledCal").textContent = "Calories: 0";
+      document.getElementById("scaledFat").textContent = "Fat: 0g";
+      document.getElementById("scaledCarbs").textContent = "Carbs: 0g";
+      document.getElementById("scaledProtein").textContent = "Protein: 0g";
+    }
+
+    updateTotalDisplay();
   </script>
 </body>
 </html>
