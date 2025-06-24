@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Macro Tracker</title>
+  <style>
+    body { font-family: sans-serif; padding: 1em; max-width: 600px; margin: auto; }
+    input { width: 100%; padding: 0.5em; margin-bottom: 1em; }
+    button { padding: 0.5em 1em; margin-top: 1em; }
+    .section { border-top: 1px solid #ccc; padding-top: 1em; margin-top: 2em; }
+    .results { margin-top: 1em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Macro Tracker</h1>
+
+  <div class="section">
+    <h2>Add by Item</h2>
+    <input type="number" id="cal" placeholder="Calories" />
+    <input type="number" id="fat" placeholder="Fat (g)" />
+    <input type="number" id="carbs" placeholder="Carbs (g)" />
+    <input type="number" id="protein" placeholder="Protein (g)" />
+    <button onclick="addItem()">Add Item</button>
+
+    <div class="results" id="itemResults">
+      Total: 0 Cal / 0g Fat / 0g Carbs / 0g Protein
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Calculate by Serving Size</h2>
+    <input type="number" id="servingSize" placeholder="Serving Size (e.g., 100g)" />
+    <input type="number" id="servingCal" placeholder="Calories per Serving" />
+    <input type="number" id="servingFat" placeholder="Fat per Serving" />
+    <input type="number" id="servingCarbs" placeholder="Carbs per Serving" />
+    <input type="number" id="servingProtein" placeholder="Protein per Serving" />
+    <input type="number" id="actualSize" placeholder="Actual Size Used (e.g., 150g)" />
+    <button onclick="calculateByServing()">Calculate</button>
+    <button onclick="addServingToTotal()">Copy to Total</button>
+
+    <div class="results" id="servingResults">
+      Scaled Macros: 0 Cal / 0g Fat / 0g Carbs / 0g Protein
+    </div>
+  </div>
+
+  <script>
+    let total = { cal: 0, fat: 0, carbs: 0, protein: 0 };
+    let lastServed = { cal: 0, fat: 0, carbs: 0, protein: 0 };
+
+    function updateTotalDisplay() {
+      document.getElementById("itemResults").textContent =
+        `Total: ${total.cal.toFixed(1)} Cal / ${total.fat.toFixed(1)}g Fat / ${total.carbs.toFixed(1)}g Carbs / ${total.protein.toFixed(1)}g Protein`;
+    }
+
+    function addItem() {
+      total.cal += parseFloat(document.getElementById("cal").value) || 0;
+      total.fat += parseFloat(document.getElementById("fat").value) || 0;
+      total.carbs += parseFloat(document.getElementById("carbs").value) || 0;
+      total.protein += parseFloat(document.getElementById("protein").value) || 0;
+
+      document.getElementById("cal").value = "";
+      document.getElementById("fat").value = "";
+      document.getElementById("carbs").value = "";
+      document.getElementById("protein").value = "";
+
+      updateTotalDisplay();
+    }
+
+    function calculateByServing() {
+      const size = parseFloat(document.getElementById("servingSize").value) || 1;
+      const actual = parseFloat(document.getElementById("actualSize").value) || 0;
+
+      const scale = actual / size;
+
+      lastServed.cal = (parseFloat(document.getElementById("servingCal").value) || 0) * scale;
+      lastServed.fat = (parseFloat(document.getElementById("servingFat").value) || 0) * scale;
+      lastServed.carbs = (parseFloat(document.getElementById("servingCarbs").value) || 0) * scale;
+      lastServed.protein = (parseFloat(document.getElementById("servingProtein").value) || 0) * scale;
+
+      document.getElementById("servingResults").textContent =
+        `Scaled Macros: ${lastServed.cal.toFixed(1)} Cal / ${lastServed.fat.toFixed(1)}g Fat / ${lastServed.carbs.toFixed(1)}g Carbs / ${lastServed.protein.toFixed(1)}g Protein`;
+    }
+
+    function addServingToTotal() {
+      total.cal += lastServed.cal;
+      total.fat += lastServed.fat;
+      total.carbs += lastServed.carbs;
+      total.protein += lastServed.protein;
+      updateTotalDisplay();
+    }
+  </script>
+</body>
+</html>
