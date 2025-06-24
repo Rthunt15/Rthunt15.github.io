@@ -25,6 +25,36 @@
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+  align-items: center;
+}
+
+.input-output-pair {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+  grid-column: span 2;
+}
+
+input {
+  width: 100%;
+  padding: 0.6em;
+  margin-bottom: 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.scaled-output {
+  min-width: 90px;
+  font-weight: 500;
+  text-align: right;
+}
 
     input {
       width: 100%;
