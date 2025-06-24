@@ -126,7 +126,7 @@
 </style>
 </head>
 <body>
-
+<!-- -------------------------------------------------------------------------- -->
   <h1>Macro Tracker</h1>
 <div class="toggle-wrapper">
   <button onclick="toggleDarkMode()">🌙</button>
@@ -151,7 +151,7 @@
       <div class="macro-box" id="totalProtein">Protein: 0g</div>
     </div>
   </div>
-
+<!-- -------------------------------------------------------------------------- -->
   <div class="section">
   <h2>Calculate by Serving Size</h2>
 
@@ -187,8 +187,7 @@
   </div>
 </div>
 
-
-
+<!-- -------------------------------------------------------------------------- -->
   <script>
     let total = { cal: 0, fat: 0, carbs: 0, protein: 0 };
     let history = [];
@@ -265,6 +264,8 @@
       document.getElementById("scaledCarbs").textContent = "Carbs: 0g";
       document.getElementById("scaledProtein").textContent = "Protein: 0g";
     }
+// Enable dark mode by default
+document.body.classList.add('dark');
 
     updateTotalDisplay();
 
