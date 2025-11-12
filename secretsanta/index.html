@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Secret Santa Request Form</title>
+	<style>
+		:root{
+			--bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#4fd1c5;
+			--glass: rgba(255,255,255,0.03);
+			--text:#e6eef3; --surface: rgba(255,255,255,0.02);
+			font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+		}
+
+		html,body{height:100%;margin:0;background:linear-gradient(180deg,#071021 0%, var(--bg) 60%); color:var(--text);}
+		.wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:36px 18px;}
+		.panel{width:100%; max-width:920px; background: linear-gradient(180deg,var(--glass), var(--surface));
+			border:1px solid rgba(255,255,255,0.04); border-radius:14px; padding:22px; box-shadow: 0 10px 30px rgba(2,6,23,0.6);}
+
+		h1{margin:0 0 6px 0; color:var(--text); font-size:1.4rem}
+		.lead{margin:6px 0 12px;color:var(--muted); font-size:0.95rem}
+
+		form{background:transparent;padding:0;margin:0}
+	.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+	.field{flex:1 1 220px;min-width:180px;margin-bottom:16px;display:flex;flex-direction:column}
+		label{display:block;font-weight:600;margin-bottom:6px;color:var(--text)}
+
+		input[type=text],textarea,select{
+			width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);
+			background: rgba(255,255,255,0.02); color:var(--text); box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+			box-sizing: border-box;
+		}
+
+		/* Use spacing on the field container instead of inputs so side-by-side inputs align */
+		.field + .field{margin-left:0}
+		input::placeholder, textarea::placeholder{color:rgba(234,241,245,0.45)}
+		textarea{min-height:92px}
+
+		.prefs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px}
+		.pref-item{background:linear-gradient(180deg, rgba(255,255,255,0.016), rgba(255,255,255,0.01)); padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+		.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+		.controls label{font-weight:500;color:var(--muted);cursor:pointer}
+		input[type=radio], input[type=checkbox]{
+			accent-color: var(--accent);
+			width:16px; height:16px;
+			margin-right:6px;
+		}
+
+		.btn{background:linear-gradient(90deg,var(--accent), #2b87a0); color:#032223; padding:10px 14px; border-radius:10px; font-weight:700; border:none; cursor:pointer}
+		.note{font-size:0.95rem;color:var(--muted);margin-bottom:12px}
+		.success{color:#7fe8d9;margin-top:10px;display:inline-block}
+
+		@media (max-width:520px){
+			.row{flex-direction:column}
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<main class="panel" role="main" aria-labelledby="ss-title">
+			<header style="margin-bottom:12px">
+				<h1 id="ss-title">Secret Santa — Request Form</h1>
+				<p class="lead">Fill out this short form. When you submit, the browser will create a text file and download it with a randomized filename (for anonymity). Keep or upload those files as you like.</p>
+			</header>
+
+			<form id="ss-form">
+		<div class="row">
+			<div class="field">
+				<label for="name">Name (required)</label>
+				<input id="name" name="name" type="text" required placeholder="First and last name" />
+			</div>
+
+			<div class="field">
+				<label for="size">Clothing size (optional)</label>
+				<input id="size" name="size" type="text" placeholder="S, M, L, XL or number" />
+			</div>
+		</div>
+
+		<h3>Preferences</h3>
+		<p class="note">Select Like / Dislike / No preference for each category.</p>
+		<div class="prefs">
+			<!-- categories -->
+			<div class="pref-item">
+				<label>Gift cards</label>
+				<div class="controls">
+					<label><input type="radio" name="giftcards" value="Like" checked> Like</label>
+					<label><input type="radio" name="giftcards" value="Dislike"> Dislike</label>
+					<label><input type="radio" name="giftcards" value="No preference"> No pref</label>
+				</div>
+			</div>
+
+			<div class="pref-item">
+				<label>Candles</label>
+				<div class="controls">
+					<label><input type="radio" name="candles" value="Like" checked> Like</label>
+					<label><input type="radio" name="candles" value="Dislike"> Dislike</label>
+					<label><input type="radio" name="candles" value="No preference"> No pref</label>
+				</div>
+			</div>
+
+			<div class="pref-item">
+				<label>Clothing</label>
+				<div class="controls">
+					<label><input type="radio" name="clothing" value="Like" checked> Like</label>
+					<label><input type="radio" name="clothing" value="Dislike"> Dislike</label>
+					<label><input type="radio" name="clothing" value="No preference"> No pref</label>
+				</div>
+			</div>
+
+			<div class="pref-item">
+				<label>Decor</label>
+				<div class="controls">
+					<label><input type="radio" name="decor" value="Like" checked> Like</label>
+					<label><input type="radio" name="decor" value="Dislike"> Dislike</label>
+					<label><input type="radio" name="decor" value="No preference"> No pref</label>
+				</div>
+			</div>
+
+			<div class="pref-item">
+				<label>Sweets</label>
+				<div class="controls">
+					<label><input type="radio" name="sweets" value="Like" checked> Like</label>
+					<label><input type="radio" name="sweets" value="Dislike"> Dislike</label>
+					<label><input type="radio" name="sweets" value="No preference"> No pref</label>
+				</div>
+			</div>
+
+			<div class="pref-item">
+				<label>Snacks</label>
+				<div class="controls">
+					<label><input type="radio" name="snacks" value="Like" checked> Like</label>
+					<label><input type="radio" name="snacks" value="Dislike"> Dislike</label>
+					<label><input type="radio" name="snacks" value="No preference"> No pref</label>
+				</div>
+			</div>
+
+			<div class="pref-item">
+				<label>Blankets</label>
+				<div class="controls">
+					<label><input type="radio" name="blankets" value="Like" checked> Like</label>
+					<label><input type="radio" name="blankets" value="Dislike"> Dislike</label>
+					<label><input type="radio" name="blankets" value="No preference"> No pref</label>
+				</div>
+			</div>
+		</div>
+
+		<h3>Favorites / Helpful info</h3>
+		<div class="row">
+			<div class="field">
+				<label for="color">Favorite color</label>
+				<input id="color" name="color" type="text" placeholder="e.g., blue, teal, black" />
+			</div>
+			<div class="field">
+				<label for="tvshow">Favorite TV show / video game</label>
+				<input id="tvshow" name="tvshow" type="text" placeholder="e.g., The Office; Zelda" />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="field">
+				<label for="food">Favorite food</label>
+				<input id="food" name="food" type="text" placeholder="e.g., sushi, pizza" />
+			</div>
+			<div class="field">
+				<label for="scent">Favorite scent / flavor</label>
+				<input id="scent" name="scent" type="text" placeholder="e.g., lavender, cinnamon" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label for="hobbies">Hobbies / Interests (optional)</label>
+			<input id="hobbies" name="hobbies" type="text" placeholder="e.g., gardening, board games" />
+		</div>
+
+		<div class="field">
+			<label for="allergies">Allergies (very important)</label>
+			<textarea id="allergies" name="allergies" placeholder="List any allergies or dietary restrictions"></textarea>
+		</div>
+
+		<div class="field">
+			<label for="dislikes">Specific dislikes or hard no's (e.g., \"hates chocolate\")</label>
+			<textarea id="dislikes" name="dislikes" placeholder="Anything you really don't want or can't have"></textarea>
+		</div>
+
+		<div style="margin-top:8px">
+			<button type="submit" class="btn">Download anonymized form</button>
+			<span id="msg" class="success" aria-live="polite"></span>
+		</div>
+	</form>
+
+	<script>
+		// Utility: generate a random filename-safe string (8 chars hex)
+		function randString(len = 8) {
+			const arr = new Uint8Array(len/2 || 4);
+			if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(arr);
+			let s = '';
+			for (let i=0;i<arr.length;i++) s += ('0'+arr[i].toString(16)).slice(-2);
+			return s.slice(0,len);
+		}
+
+		function getRadioValue(form, name) {
+			const r = form.querySelector('input[name="'+name+'"]:checked');
+			return r ? r.value : '';
+		}
+
+		document.getElementById('ss-form').addEventListener('submit', function(ev){
+			ev.preventDefault();
+			const form = ev.target;
+			const name = form.name.value.trim();
+			if (!name) {
+				alert('Please enter a name.');
+				return;
+			}
+
+			// Collect values
+			const data = {
+				Name: name,
+				ClothingSize: form.size.value.trim(),
+				Preferences: {
+					GiftCards: getRadioValue(form,'giftcards'),
+					Candles: getRadioValue(form,'candles'),
+					Clothing: getRadioValue(form,'clothing'),
+					Decor: getRadioValue(form,'decor'),
+					Sweets: getRadioValue(form,'sweets'),
+					Snacks: getRadioValue(form,'snacks'),
+					Blankets: getRadioValue(form,'blankets')
+				},
+				Favorites: {
+					Color: form.color.value.trim(),
+					TV_Show_or_Video_Game: form.tvshow.value.trim(),
+					Food: form.food.value.trim(),
+					Scent_or_Flavor: form.scent.value.trim(),
+					Hobbies: form.hobbies.value.trim()
+				},
+				Allergies: form.allergies.value.trim(),
+				SpecificDislikes: form.dislikes.value.trim(),
+				SubmittedAt: new Date().toISOString()
+			};
+
+			// Build text content
+			let lines = [];
+			lines.push('Secret Santa Request Form');
+			lines.push('========================');
+			lines.push('');
+			lines.push('Name: ' + data.Name);
+			if (data.ClothingSize) lines.push('Clothing size: ' + data.ClothingSize);
+			lines.push('');
+			lines.push('Preferences:');
+			for (const k in data.Preferences) lines.push(' - ' + k + ': ' + data.Preferences[k]);
+			lines.push('');
+			lines.push('Favorites / Helpful info:');
+			for (const k in data.Favorites) if (data.Favorites[k]) lines.push(' - ' + k + ': ' + data.Favorites[k]);
+			lines.push('');
+			lines.push('Allergies: ' + (data.Allergies || 'None listed'));
+			lines.push('Specific dislikes: ' + (data.SpecificDislikes || 'None listed'));
+			lines.push('');
+			lines.push('Submitted: ' + data.SubmittedAt);
+
+			const content = lines.join('\n');
+
+					// POST the submission to the server endpoint so it is saved server-side (not visible to the submitter)
+					fetch('/api/secretsanta', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(data)
+					}).then(r => r.json())
+					.then(j => {
+						const msg = document.getElementById('msg');
+						if (j && j.ok) {
+							msg.textContent = 'Submission saved to server.';
+							// Optionally clear the name field to avoid leaving PII in the browser
+							// form.name.value = '';
+						} else {
+							msg.textContent = 'Failed to save on server — saved locally instead.';
+							// Fallback: trigger local download so the submitter still gets a copy
+							triggerLocalDownload(content);
+						}
+					}).catch(err => {
+						console.error('submit error', err);
+						const msg = document.getElementById('msg');
+						msg.textContent = 'Network error — saved locally instead.';
+						triggerLocalDownload(content);
+					});
+
+			});
+
+			function triggerLocalDownload(content) {
+				const rand = randString(8);
+				const filename = 'secretsanta_' + rand + '.txt';
+				const blob = new Blob([content], {type: 'text/plain;charset=utf-8'});
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				a.remove();
+				URL.revokeObjectURL(url);
+			}
+	</script>
+		</main>
+	</div>
+	</body>
+</html>
