@@ -1,1 +1,101 @@
-Home
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Welcome — Home</title>
+    <style>
+        :root{
+            --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#4fd1c5;
+            --glass: rgba(255,255,255,0.03);
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+        html,body{height:100%;margin:0;background:
+            linear-gradient(180deg,#071021 0%, var(--bg) 60%); color:#e6eef3;}
+        .wrap{
+            min-height:100vh; display:flex; align-items:center; justify-content:center;
+            padding:40px 20px;
+        }
+        .panel{
+            width:100%; max-width:980px; background: linear-gradient(180deg,var(--glass), rgba(255,255,255,0.02));
+            border:1px solid rgba(255,255,255,0.04); border-radius:14px; padding:28px;
+            box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+            backdrop-filter: blur(6px);
+        }
+        header{display:flex; align-items:center; gap:16px; margin-bottom:18px}
+        .logo{
+            width:56px;height:56px; display:grid; place-items:center; border-radius:10px;
+            background:linear-gradient(135deg,var(--accent), #2b87a0); color:#042226; font-weight:700;
+            box-shadow: 0 6px 18px rgba(79,209,197,0.12);
+        }
+        h1{font-size:1.4rem;margin:0}
+        p.lead{margin:6px 0 0;color:var(--muted); font-size:0.95rem}
+        .grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:20px}
+        .card{
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius:10px; padding:18px; display:flex;flex-direction:column; gap:12px;
+            border:1px solid rgba(255,255,255,0.03); transition: transform .16s ease, box-shadow .16s ease;
+            text-decoration:none; color:inherit;
+        }
+        .card:hover{ transform: translateY(-6px); box-shadow: 0 12px 40px rgba(2,6,23,0.6)}
+        .card .title{font-weight:600}
+        .card .desc{color:var(--muted); font-size:0.92rem; margin-top:6px}
+        .cta{
+            margin-top:auto; display:flex; gap:8px; align-items:center;
+        }
+        .btn{
+            background:linear-gradient(90deg,var(--accent), #2b87a0); color:#032223; padding:8px 12px; border-radius:8px;
+            font-weight:600; text-decoration:none; border:none; cursor:pointer;
+        }
+        .meta{margin-left:auto;color:var(--muted); font-size:0.85rem}
+        footer{margin-top:16px; color:var(--muted); font-size:0.85rem; text-align:right}
+        @media (max-width:520px){
+            header{flex-direction:column; align-items:flex-start}
+            footer{text-align:left}
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <main class="panel" role="main" aria-labelledby="welcome-title">
+            <header>
+                <div class="logo" aria-hidden="true">WG</div>
+                <div>
+                    <h1 id="welcome-title">Welcome</h1>
+                    <p class="lead">Home screen — quick links to your projects.</p>
+                </div>
+            </header>
+
+            <section class="grid" aria-label="Projects">
+                <!-- Link to first project folder -->
+                <a class="card" href="./LGEN/" aria-labelledby="proj1-title">
+                    <div>
+                        <div class="title" id="proj1-title">LGEN</div>
+                        <div class="desc">Open the LGEN project folder — demo, assets, and source.</div>
+                    </div>
+                    <div class="cta">
+                        <span class="meta">Folder</span>
+                        <button class="btn" type="button" onclick="location.href='./LGEN/'" aria-hidden="true">Open</button>
+                    </div>
+                </a>
+
+                <!-- Link to second project folder -->
+                <a class="card" href="./LoveGen/" aria-labelledby="proj2-title">
+                    <div>
+                        <div class="title" id="proj2-title">LoveGen</div>
+                        <div class="desc">Open the LoveGen project folder — experiments and pages.</div>
+                    </div>
+                    <div class="cta">
+                        <span class="meta">Folder</span>
+                        <button class="btn" type="button" onclick="location.href='./LoveGen/'" aria-hidden="true">Open</button>
+                    </div>
+                </a>
+            </section>
+
+            <footer>
+                Tip: add an index.html inside each folder to make the links open properly.
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
