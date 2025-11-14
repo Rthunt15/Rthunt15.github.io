@@ -66,6 +66,73 @@ app.post('/api/secretsanta', (req, res) => {
   }
 });
 
+// Create randomized assignments: POST { recipients: ["Name1","Name2",...] }
+// Returns { ok: true, assignments: { "Name1": "/submissions/assigned/<file>" ... }}
+app.post('/api/assign', (req, res) => {
+  try {
+    const recipients = Array.isArray(req.body.recipients) ? req.body.recipients.map(s=>String(s).trim()).filter(Boolean) : [];
+    if (!recipients.length) return res.status(400).json({ok:false, error:'no_recipients'});
+
+    // Read submissions
+    const files = fs.readdirSync(outDir).filter(f => f.endsWith('.txt'));
+    if (files.length < recipients.length) return res.status(400).json({ok:false, error:'not_enough_submissions', submissions: files.length});
+
+    // Read each file and extract submitter name (look for line starting with 'Name:')
+    const subs = files.map(fname => {
+      const full = path.join(outDir, fname);
+      const txt = fs.readFileSync(full, 'utf8');
+      const m = txt.match(/^Name:\s*(.*)$/m);
+      const submitter = m ? m[1].trim() : null;
+      return { fname, full, submitter };
+    });
+
+    // We'll try to find a derangement: assign subs to recipients so submitter != recipient
+    // Approach: shuffle subs and try up to maxAttempts
+    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } }
+
+    const maxAttempts = 5000;
+    let attempt = 0;
+    let chosen = null;
+    const pool = subs.slice();
+
+    while(attempt < maxAttempts){
+      attempt++;
+      shuffle(pool);
+      const pick = pool.slice(0, recipients.length);
+      let ok = true;
+      for (let i=0;i<recipients.length;i++){
+        const r = recipients[i];
+        const s = pick[i];
+        if (s.submitter && r && s.submitter.toLowerCase() === r.toLowerCase()){ ok=false; break; }
+      }
+      if (ok){ chosen = pick; break; }
+    }
+
+    if (!chosen) return res.status(500).json({ok:false, error:'no_valid_assignment'});
+
+    // Create assigned directory
+    const assignedDir = path.join(outDir, 'assigned');
+    if (!fs.existsSync(assignedDir)) fs.mkdirSync(assignedDir, {recursive:true});
+
+    const assignments = {};
+    for (let i=0;i<recipients.length;i++){
+      const recipient = recipients[i];
+      const sub = chosen[i];
+      // copy file to assigned with new random filename
+      const newName = 'assigned_' + randString(12) + '.txt';
+      const newPath = path.join(assignedDir, newName);
+      fs.copyFileSync(sub.full, newPath);
+      // Provide a relative URL to the assigned file (server serves static files)
+      assignments[recipient] = '/submissions/assigned/' + newName;
+    }
+
+    return res.json({ok:true, assignments});
+  } catch (err) {
+    console.error('assign error', err);
+    return res.status(500).json({ok:false, error:'server_error'});
+  }
+});
+
 app.get('/', (req, res) => res.send('Secret Santa submission server is running.'));
 
 app.listen(PORT, () => console.log('Server listening on port', PORT));

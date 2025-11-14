@@ -189,6 +189,10 @@
 	</form>
 
 	<script>
+	// If you want to use Formspree (for GitHub Pages), set FORM_ENDPOINT to your Formspree URL
+	// Example: const FORM_ENDPOINT = 'https://formspree.io/f/abcd1234';
+	// Leave empty to use the local server endpoint: '/api/secretsanta'
+	const FORM_ENDPOINT = 'https://formspree.io/f/mjkjkbob';
 		// Utility: generate a random filename-safe string (8 chars hex)
 		function randString(len = 8) {
 			const arr = new Uint8Array(len/2 || 4);
@@ -258,29 +262,33 @@
 
 			const content = lines.join('\n');
 
-					// POST the submission to the server endpoint so it is saved server-side (not visible to the submitter)
-					fetch('/api/secretsanta', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify(data)
-					}).then(r => r.json())
-					.then(j => {
-						const msg = document.getElementById('msg');
-						if (j && j.ok) {
-							msg.textContent = 'Submission saved to server.';
-							// Optionally clear the name field to avoid leaving PII in the browser
-							// form.name.value = '';
-						} else {
-							msg.textContent = 'Failed to save on server — saved locally instead.';
-							// Fallback: trigger local download so the submitter still gets a copy
-							triggerLocalDownload(content);
-						}
-					}).catch(err => {
-						console.error('submit error', err);
-						const msg = document.getElementById('msg');
-						msg.textContent = 'Network error — saved locally instead.';
-						triggerLocalDownload(content);
-					});
+							// Determine target endpoint: Formspree (for GitHub Pages) or local server
+							const endpoint = FORM_ENDPOINT && FORM_ENDPOINT.trim().length ? FORM_ENDPOINT.trim() : '/api/secretsanta';
+							const headers = {'Content-Type':'application/json'};
+							// Formspree recommends Accept header for JSON responses
+							if (endpoint.includes('formspree.io')) headers['Accept'] = 'application/json';
+
+							fetch(endpoint, {
+								method: 'POST',
+								headers,
+								body: JSON.stringify(data)
+							}).then(r => {
+								const msg = document.getElementById('msg');
+								if (r.ok) {
+									msg.textContent = endpoint.includes('formspree.io') ? 'Submission sent via Formspree.' : 'Submission saved to server.';
+									// Optionally clear the name field to avoid leaving PII in the browser
+									// form.name.value = '';
+								} else {
+									// non-2xx response
+									msg.textContent = 'Failed to save on server — saved locally instead.';
+									triggerLocalDownload(content);
+								}
+							}).catch(err => {
+								console.error('submit error', err);
+								const msg = document.getElementById('msg');
+								msg.textContent = 'Network error — saved locally instead.';
+								triggerLocalDownload(content);
+							});
 
 			});
 
