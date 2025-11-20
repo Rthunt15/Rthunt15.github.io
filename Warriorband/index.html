@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Warrior Band • Home</title>
+
+    <!-- Colors: primary #0C5449, accent #FFCC33 -->
+    <style>
+        :root{
+            --primary: #0C5449;
+            --accent: #FFCC33;
+            --bg: #ffffffcc;
+            --muted: #6b6b6b;
+            --radius: 8px;
+            --max-width: 1100px;
+        }
+
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+            color:var(--primary);
+            background:linear-gradient(180deg,#f7f9f8 0%, #ffffff 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            line-height:1.4;
+        }
+
+        .container{
+            max-width:var(--max-width);
+            margin:32px auto;
+            padding:0 20px;
+        }
+
+        header{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            padding:12px 0;
+        }
+
+        /* logo placeholder */
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            text-decoration:none;
+            color:var(--primary);
+        }
+        .logo-graphic{
+            width:56px;
+            height:56px;
+            border-radius:0px;
+            overflow:hidden;
+            display:block;
+            background:transparent;
+        }
+        .logo-graphic img{width:100%;height:100%;object-fit:cover;display:block;}
+
+        nav a{
+            margin-left:14px;
+            color:var(--primary);
+            text-decoration:none;
+            font-weight:600;
+            padding:8px 10px;
+            border-radius:6px;
+        }
+        nav a.cta{
+            background:var(--accent);
+            color:#000;
+        }
+        nav a:hover{opacity:0.9}
+
+        /* Hero */
+        .hero{
+            margin-top:18px;
+            background:linear-gradient(90deg, rgba(12,84,73,0.06), rgba(255,204,51,0.03));
+            padding:28px;
+            border-radius:12px;
+            display:flex;
+            gap:24px;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+        .hero-left{flex:1 1 380px}
+        .hero h1{
+            margin:0 0 8px 0;
+            font-size:28px;
+            color:var(--primary);
+        }
+        .hero p{margin:0 0 14px 0; color:var(--muted)}
+        .btn{
+            display:inline-block;
+            background:var(--primary);
+            color:#fff;
+            padding:10px 16px;
+            border-radius:8px;
+            text-decoration:none;
+            font-weight:700;
+        }
+        .btn.secondary{
+            background:transparent;
+            color:var(--primary);
+            border:2px solid rgba(12,84,73,0.12);
+            font-weight:600;
+            margin-left:8px;
+        }
+
+        /* Hero image placeholder */
+        .hero-art{
+            flex:0 0 220px;
+            height:140px;
+            border-radius:10px;
+            background:repeating-linear-gradient(45deg, rgba(12,84,73,0.08), rgba(12,84,73,0.08) 10px, rgba(255,204,51,0.03) 10px, rgba(255,204,51,0.03) 20px);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:var(--muted);
+            font-weight:700;
+            font-size:14px;
+        }
+
+        /* Main grid */
+        .grid{
+            display:grid;
+            grid-template-columns: 2fr 1fr;
+            gap:20px;
+            margin-top:20px;
+        }
+        @media (max-width:880px){ .grid{grid-template-columns:1fr} }
+
+        /* Posts */
+        .posts{display:flex;flex-direction:column;gap:14px}
+        .post{
+            display:flex;
+            gap:14px;
+            background:#fff;
+            border-radius:10px;
+            padding:12px;
+            box-shadow:0 6px 18px rgba(12,84,73,0.03);
+            align-items:flex-start;
+        }
+        .post-thumb{
+            width:120px;
+            height:80px;
+            border-radius:8px;
+            background:#f0f0f0;
+            flex-shrink:0;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:var(--muted);
+            font-weight:700;
+            font-size:12px;
+        }
+        .post h3{margin:0 0 8px 0;font-size:16px}
+        .post p{margin:0;color:var(--muted);font-size:14px}
+
+        /* Sidebar */
+        .card{
+            background:#ffffff;
+            padding:12px;
+            border-radius:10px;
+            box-shadow:0 6px 18px rgba(12,84,73,0.03);
+        }
+        .events{display:flex;flex-direction:column;gap:10px}
+        .event{
+            border-left:4px solid var(--accent);
+            padding:8px;
+            padding-left:12px;
+            background:linear-gradient(90deg, rgba(255,204,51,0.03), transparent);
+            border-radius:6px;
+        }
+        .muted{color:var(--muted);font-size:13px}
+
+        footer{
+            margin-top:26px;
+            padding:18px 0;
+            color:var(--muted);
+            font-size:13px;
+            text-align:center;
+        }
+
+        .small-links a{color:var(--primary); text-decoration:none; margin:0 6px; font-weight:600}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html" aria-label="Warrior Band home">
+                <div class="logo-graphic" aria-hidden="true">
+                    <img src="Logos/WSUShield.png" alt="Warrior Band logo">
+                </div>
+                <div>
+                    <div style="font-weight:800">Warrior Band</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:2px">Wayne State University</div>
+                </div>
+            </a>
+
+            <nav>
+                <a href="about.html">About</a>
+                <a href="events.html">Events</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="meet.html">Meet the Band</a>
+                <a class="cta" href="contact.html">Contact</a>
+            </nav>
+        </header>
+
+        <section class="hero" role="region" aria-label="Hero">
+            <div class="hero-left">
+                <h1>Welcome to the Warrior Band Neocity</h1>
+                <p>A micro-site for news, photos, upcoming events, and community for the Wayne State University Warrior Marching Band. Built as a simple, extensible template.</p>
+                <a class="btn" href="blog.html">Latest Posts</a>
+                <a class="btn secondary" href="events.html">See Events</a>
+            </div>
+            <div class="hero-art" role="img" aria-label="Hero image placeholder">
+                IMAGE / BANNER
+            </div>
+        </section>
+
+        <main class="grid" role="main">
+            <div>
+                <h2 style="margin:18px 0 8px 0">Latest Posts</h2>
+                <div class="posts">
+                    <article class="post">
+                        <div class="post-thumb" aria-hidden="true">IMG</div>
+                        <div>
+                            <h3>Season Opener Recap</h3>
+                            <p class="muted">Highlights from the first game, photos, and rehearsal notes. <a href="blog/post1.html">Read more →</a></p>
+                        </div>
+                    </article>
+
+                    <article class="post">
+                        <div class="post-thumb" aria-hidden="true">IMG</div>
+                        <div>
+                            <h3>Section Spotlight: Drumline</h3>
+                            <p class="muted">Meet the drumline and see practice clips. <a href="blog/post2.html">Read more →</a></p>
+                        </div>
+                    </article>
+
+                    <article class="post">
+                        <div class="post-thumb" aria-hidden="true">IMG</div>
+                        <div>
+                            <h3>How to Join</h3>
+                            <p class="muted">Information for prospective members and audition dates. <a href="about.html#auditions">Read more →</a></p>
+                        </div>
+                    </article>
+                 </div>
+            </div>
+
+            <aside>
+                <div class="card">
+                    <h3 style="margin-top:0">Upcoming Events</h3>
+                    <div class="events" id="upcoming-events">
+                        <!-- Upcoming events will be loaded from the public Google Calendar feed. -->
+                        <div class="event"><div style="font-weight:700">Loading upcoming events…</div></div>
+                        </div>
+                    <p style="margin-top:12px" class="muted">Full calendar: <a href="events.html">events page</a></p>
+                </div>
+
+                <div style="height:14px"></div>
+
+                <div class="card">
+                    <h3 style="margin-top:0">Gallery</h3>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
+                        <!-- placeholders for photo thumbnails -->
+                        <div style="background:#f3f3f3;height:64px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted)">IMG</div>
+                        <div style="background:#f3f3f3;height:64px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted)">IMG</div>
+                        <div style="background:#f3f3f3;height:64px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted)">IMG</div>
+                    </div>
+                    <p class="muted" style="margin-top:10px">Full gallery: <a href="gallery.html">gallery page</a></p>
+                </div>
+
+                <div style="height:14px"></div>
+
+                <div class="card">
+                    <h3 style="margin-top:0">Stay Connected</h3>
+                    <p class="muted">Subscribe for news (placeholder form)</p>
+                    <form action="#" onsubmit="event.preventDefault(); alert('Subscribe placeholder');">
+                        <input type="email" placeholder="Email address" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #e6e6e6;margin-bottom:8px">
+                        <button class="btn" style="width:100%">Subscribe</button>
+                    </form>
+                </div>
+            </aside>
+        </main>
+
+        <footer>
+            <div class="small-links">
+                <a href="about.html">About</a> ·
+                <a href="privacy.html">Privacy</a> ·
+                <a href="contact.html">Contact</a>
+            </div>
+            <div style="margin-top:8px">© <span id="year"></span> Warrior Band • Built for Wayne State University</div>
+        </footer>
+    </div>
+
+    <script>
+        // small runtime touches
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+        <script>
+        /*
+            Load upcoming events from the public Google Calendar used in the events page.
+            The calendar id is embedded (base64) in the events page iframe; we'll decode
+            the same base64 string here and use the older GData JSON feed via JSONP
+            so this works from GitHub Pages without an API key.
+        */
+        (function(){
+            // Base64 string copied from the events embed src 'src=...'
+            const b64 = 'ZGM1YTc4M2NmZDU1Nzc5NDE4OTk1YjJlMjcxNzYwOGJhZDYzZDNkNzk3ZTlmMTQ4YTI1NTkwMmYzOTlmNWM2ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t';
+            let calId = '';
+            try{ calId = atob(b64); }catch(e){ console.warn('calendar id decode failed', e); }
+
+            if (!calId) return;
+
+            // JSONP callback name
+            const cbName = '__gcal_cb_' + Math.floor(Math.random()*1e6);
+            window[cbName] = function(data){
+                try{
+                    const container = document.getElementById('upcoming-events');
+                    container.innerHTML = '';
+                    if (!data || !data.feed || !data.feed.entry){
+                        container.innerHTML = '<div class="event"><div style="font-weight:700">No upcoming events found</div></div>';
+                        return;
+                    }
+                    // entries are in feed.entry; they may be ordered by start time if requested
+                    const entries = data.feed.entry.slice(0,6);
+                    for(const e of entries){
+                        const title = e.title && e.title.$t ? e.title.$t : 'Event';
+                        // find when: gd$when[0].startTime
+                        let whenText = '';
+                        if (e['gd$when'] && e['gd$when'][0] && e['gd$when'][0].startTime){
+                            const dt = new Date(e['gd$when'][0].startTime);
+                            whenText = dt.toLocaleString(undefined, { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+                        }
+                        const div = document.createElement('div'); div.className='event';
+                        const h = document.createElement('div'); h.style.fontWeight='700'; h.textContent = title;
+                        const m = document.createElement('div'); m.className='muted'; m.textContent = whenText;
+                        div.appendChild(h); div.appendChild(m);
+                        container.appendChild(div);
+                    }
+                }finally{
+                    // cleanup callback
+                    try{ delete window[cbName]; }catch(e){}
+                }
+            };
+
+            // Build GData feed URL (JSON-in-script) to avoid CORS/API key
+            const feedUrl = 'https://www.google.com/calendar/feeds/' + encodeURIComponent(calId) + '/public/full?alt=json-in-script&orderby=starttime&sortorder=ascending&futureevents=true&max-results=6&callback=' + cbName;
+
+            const s = document.createElement('script'); s.src = feedUrl; s.async = true; s.onerror = function(){
+                const c = document.getElementById('upcoming-events'); c.innerHTML = '<div class="event"><div style="font-weight:700">Unable to load events</div></div>';
+            };
+            document.body.appendChild(s);
+        })();
+        </script>
+</body>
+</html>

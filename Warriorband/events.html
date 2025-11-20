@@ -1,0 +1,36 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Warrior Band • Events</title>
+	<style>
+		:root{ --bg: #05020107; --primary:#0C5449; --muted:#6b6b6b; }
+		html,body{height:100%;margin:0;padding:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:var(--primary)}
+		.container{max-width:1100px;margin:0 auto;padding:18px}
+		header{display:flex;align-items:center;gap:12px;padding:8px 0}
+		.back-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--primary);text-decoration:none;font-weight:700;border:1px solid rgba(0,0,0,0.06)}
+		.logo-link{display:flex;align-items:center;text-decoration:none;color:inherit;margin-left:0}
+		.logo-img{width:56px;height:56px;border-radius:10px;overflow:hidden;display:block;border:none;background:transparent}
+		.logo-img img{width:100%;height:100%;object-fit:cover;display:block}
+		main{height:calc(100vh - 100px);padding:0;margin-top:12px}
+		iframe{width:100%;height:100%;border:0}
+		@media (max-width:720px){ .container{padding:12px} .logo-img{width:48px;height:48px} }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<a class="logo-link" href="index.html" aria-label="Warrior Band home">
+				<span class="logo-img"><img src="logos/WSUShield.png" alt="WSU Shield"></span>
+			</a>
+			<a class="back-btn" href="index.html" aria-label="Back to home">← Back</a>
+		</header>
+
+		<main role="main" aria-label="Events calendar">
+			<iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FDetroit&showPrint=0&showTz=0&title=Warrior%20Band%20Events&src=ZGM1YTc4M2NmZDU1Nzc5NDE4OTk1YjJlMjcxNzYwOGJhZDYzZDNkNzk3ZTlmMTQ4YTI1NTkwMmYzOTlmNWM2ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=NnF0djM1Z2txdm9lZ3E3NmU1ODh2YmtlZDZnYm8xbzJAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%230c5449&color=%237986cb" style="border-width:0" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+		</main>
+	</div>
+</body>
+</html>

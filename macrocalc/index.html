@@ -5,137 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Macro Tracker</title>
   <style>
-  :root {
-    --bg: #f8f9fa;
-    --fg: #333;
-    --box: #fff;
-    --input-bg: #fff;
-    --output-bg: #f1f3f5;
+  :root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#4fd1c5;
+    --glass: rgba(255,255,255,0.03);
+    --text:#e6eef3; --surface: rgba(255,255,255,0.02);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
 
-  body.dark {
-    --bg: #121212;
-    --fg: #eee;
-    --box: #1e1e1e;
-    --input-bg: #2b2b2b;
-    --output-bg: #2a2a2a;
-  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#071021 0%, var(--bg) 60%); color:var(--text);}
+  body{font-family:var(--font-family, Inter, system-ui, -apple-system, "Segoe UI", Roboto);padding:20px}
 
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    padding: 1em;
-    margin: 0;
-    background-color: var(--bg);
-    color: var(--fg);
-    transition: background-color 0.3s, color 0.3s;
-  }
+  h1,h2{text-align:center;margin-bottom:0.5em}
 
-  h1, h2 {
-    text-align: center;
-    margin-bottom: 0.5em;
-  }
+  /* toggle removed */
 
-  .toggle-wrapper {
-    position: absolute;
-    top: 1em;
-    right: 1em;
-  }
+  .section{background: linear-gradient(180deg,var(--glass), var(--surface)); padding:18px; margin:18px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.04); box-shadow: 0 8px 30px rgba(2,6,23,0.6);}
 
-  .section {
-    background-color: var(--box);
-    padding: 1em;
-    margin: 1em 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: background-color 0.3s;
-  }
+  input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:var(--text);box-sizing:border-box}
+  .input-stack{display:flex;flex-direction:column;gap:12px}
 
-  input {
-    width: 100%;
-    padding: 0.6em;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1em;
-    background-color: var(--input-bg);
-    color: var(--fg);
-    box-sizing: border-box;
-  }
-.input-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8em;
-}
+  button{padding:10px 14px;margin:0.3em 0.3em 0 0;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:linear-gradient(90deg,var(--accent), #2b87a0);color:#032223}
+  button:hover{opacity:0.95}
 
-  button {
-    padding: 0.6em 1em;
-    margin: 0.3em 0.3em 0 0;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-  }
+  .macro-boxes{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+  .macro-box{flex:1 1 45%;background:linear-gradient(180deg, rgba(255,255,255,0.016), rgba(255,255,255,0.01));padding:12px;border-radius:10px;text-align:center;font-size:1rem;border:1px solid rgba(255,255,255,0.03)}
 
-  button:hover {
-    background-color: #0056b3;
-  }
-
-  .macro-boxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    margin-top: 1em;
-  }
-
-  .macro-box {
-    flex: 1 1 45%;
-    background-color: var(--output-bg);
-    padding: 0.8em;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 1em;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
-  }
-
-  .button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-    margin-top: 0.5em;
-  }
-
-  .grid-2col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8em;
-  }
-
-  .scaled-row {
-    display: contents;
-  }
-
-  .scaled-row input {
-    margin-bottom: 0;
-  }
-
-  .scaled-output {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 0.5em;
-    font-weight: 500;
-    font-size: 0.95em;
-    color: var(--fg);
-  }
+  .button-group{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .grid-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .scaled-row{display:contents}
+  .scaled-row input{margin-bottom:0}
+  .scaled-output{display:flex;align-items:center;justify-content:flex-end;padding:0 0.5em;font-weight:500;font-size:0.95em;color:var(--text)}
 </style>
 </head>
 <body class="dark">
 <!-- -------------------------------------------------------------------------- -->
   <h1>Macro Tracker</h1>
-<div class="toggle-wrapper">
-  <button onclick="toggleDarkMode()">🌙</button>
-</div>
+<!-- dark mode toggle removed -->
 
   <div class="section">
     <h2>Add by Item</h2>
@@ -275,9 +180,7 @@
 
     updateTotalDisplay();
 
-    function toggleDarkMode() {
-  document.body.classList.toggle('dark');
-}
+    // dark mode toggle removed; page uses site theme
 
   </script>
 </body>
