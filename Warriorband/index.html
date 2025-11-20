@@ -216,7 +216,7 @@
                 <a class="btn secondary" href="events.html">See Events</a>
             </div>
             <div class="hero-art" role="img" aria-label="Hero image placeholder">
-                IMAGE / BANNER
+                <img src="Images/IMG4.png" alt="How to Join" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px">
             </div>
         </section>
 
@@ -225,7 +225,7 @@
                 <h2 style="margin:18px 0 8px 0">Latest Posts</h2>
                 <div class="posts">
                     <article class="post">
-                        <div class="post-thumb" aria-hidden="true">IMG</div>
+                        <div class="post-thumb" aria-hidden="true"><img src="Images/IMG1.png" alt="How to Join" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px"></div>
                         <div>
                             <h3>Season Opener Recap</h3>
                             <p class="muted">Highlights from the first game, photos, and rehearsal notes. <a href="blog/post1.html">Read more →</a></p>
@@ -233,7 +233,8 @@
                     </article>
 
                     <article class="post">
-                        <div class="post-thumb" aria-hidden="true">IMG</div>
+                        <div class="post-thumb" aria-hidden="true"><img src="Images/IMG2.png" alt="How to Join" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px"></div>
+                        
                         <div>
                             <h3>Section Spotlight: Drumline</h3>
                             <p class="muted">Meet the drumline and see practice clips. <a href="blog/post2.html">Read more →</a></p>
@@ -241,7 +242,9 @@
                     </article>
 
                     <article class="post">
-                        <div class="post-thumb" aria-hidden="true">IMG</div>
+                        <div class="post-thumb" aria-hidden="true">
+                            <img src="Images/IMG3.png" alt="How to Join" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:6px">
+                        </div>
                         <div>
                             <h3>How to Join</h3>
                             <p class="muted">Information for prospective members and audition dates. <a href="about.html#auditions">Read more →</a></p>
@@ -253,11 +256,21 @@
             <aside>
                 <div class="card">
                     <h3 style="margin-top:0">Upcoming Events</h3>
-                    <div class="events" id="upcoming-events">
-                        <!-- Upcoming events will be loaded from the public Google Calendar feed. -->
-                        <div class="event"><div style="font-weight:700">Loading upcoming events…</div></div>
+                    <div class="events">
+                        <div class="event">
+                            <div style="font-weight:700">Rehearsal - Old Main 2401</div>
+                            <div class="muted">Fri • Nov 21 • 5:30pm</div>
                         </div>
-                    <p style="margin-top:12px" class="muted">Full calendar: <a href="events.html">events page</a></p>
+                        <div class="event">
+                            <div style="font-weight:700">Home Game - Field House</div>
+                            <div class="muted">Sat • Nov 6 • 12:00pm</div>
+                        </div>
+                        <div class="event">
+                            <div style="font-weight:700">Home Game - Field House</div>
+                            <div class="muted">Thu • Jan 15 • 5:30pm</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:12px" class="muted">(this will need to be a google calendar that gets imported) Full calendar: <a href="events.html">events page</a></p>
                 </div>
 
                 <div style="height:14px"></div>
@@ -300,61 +313,5 @@
         // small runtime touches
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
-        <script>
-        /*
-            Load upcoming events from the public Google Calendar used in the events page.
-            The calendar id is embedded (base64) in the events page iframe; we'll decode
-            the same base64 string here and use the older GData JSON feed via JSONP
-            so this works from GitHub Pages without an API key.
-        */
-        (function(){
-            // Base64 string copied from the events embed src 'src=...'
-            const b64 = 'ZGM1YTc4M2NmZDU1Nzc5NDE4OTk1YjJlMjcxNzYwOGJhZDYzZDNkNzk3ZTlmMTQ4YTI1NTkwMmYzOTlmNWM2ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t';
-            let calId = '';
-            try{ calId = atob(b64); }catch(e){ console.warn('calendar id decode failed', e); }
-
-            if (!calId) return;
-
-            // JSONP callback name
-            const cbName = '__gcal_cb_' + Math.floor(Math.random()*1e6);
-            window[cbName] = function(data){
-                try{
-                    const container = document.getElementById('upcoming-events');
-                    container.innerHTML = '';
-                    if (!data || !data.feed || !data.feed.entry){
-                        container.innerHTML = '<div class="event"><div style="font-weight:700">No upcoming events found</div></div>';
-                        return;
-                    }
-                    // entries are in feed.entry; they may be ordered by start time if requested
-                    const entries = data.feed.entry.slice(0,6);
-                    for(const e of entries){
-                        const title = e.title && e.title.$t ? e.title.$t : 'Event';
-                        // find when: gd$when[0].startTime
-                        let whenText = '';
-                        if (e['gd$when'] && e['gd$when'][0] && e['gd$when'][0].startTime){
-                            const dt = new Date(e['gd$when'][0].startTime);
-                            whenText = dt.toLocaleString(undefined, { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
-                        }
-                        const div = document.createElement('div'); div.className='event';
-                        const h = document.createElement('div'); h.style.fontWeight='700'; h.textContent = title;
-                        const m = document.createElement('div'); m.className='muted'; m.textContent = whenText;
-                        div.appendChild(h); div.appendChild(m);
-                        container.appendChild(div);
-                    }
-                }finally{
-                    // cleanup callback
-                    try{ delete window[cbName]; }catch(e){}
-                }
-            };
-
-            // Build GData feed URL (JSON-in-script) to avoid CORS/API key
-            const feedUrl = 'https://www.google.com/calendar/feeds/' + encodeURIComponent(calId) + '/public/full?alt=json-in-script&orderby=starttime&sortorder=ascending&futureevents=true&max-results=6&callback=' + cbName;
-
-            const s = document.createElement('script'); s.src = feedUrl; s.async = true; s.onerror = function(){
-                const c = document.getElementById('upcoming-events'); c.innerHTML = '<div class="event"><div style="font-weight:700">Unable to load events</div></div>';
-            };
-            document.body.appendChild(s);
-        })();
-        </script>
 </body>
 </html>
